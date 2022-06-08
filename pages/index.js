@@ -1,8 +1,38 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import Image from "next/image";
+import styles from "../styles/Home.module.css";
 
 export default function Home() {
+  const clickedForPdf = async () => {
+    // Capture current window's URL:
+    const currentUrl = window.location.href;
+    // Pass this URL to the API's endpoint 'pdfGenerate' and download the streamed-response:
+    const returnedContent = await fetch(`/api/pdfGenerate?${currentUrl}`)
+      // Convert response body (readable stream) to 'blob':
+      .then((response) => response.blob())
+      // Generate url for this blob:
+      .then((blob) => URL.createObjectURL(blob))
+      // Generate hidden link, insert url, and click-download:
+      .then((href) => {
+        const link = document.createElement("a");
+        document.body.appendChild(link);
+        link.style = "display: none";
+        link.href = href;
+        link.download = `${currentUrl}.pdf`;
+        link.click();
+      });
+    // const returnedContent = await fetch(`/api/pdfGenerate?${currentUrl}`).then(
+    //   (response) => {
+    //     console.log("response:", response);
+    //     const blob = new Blob([response.body], { type: "application/pdf" });
+    //     const link = document.createElement("a");
+    //     link.href = window.URL.createObjectURL(blob);
+    //     link.download = `${currentUrl}.pdf`;
+    //     link.click();
+    //   }
+    // );
+    // console.log("returnedContent:", returnedContent);
+  };
   return (
     <div className={styles.container}>
       <Head>
@@ -12,12 +42,15 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
+        <button className={styles.btn} onClick={clickedForPdf}>
+          Generate PDF
+        </button>
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
+          Get started by editing{" "}
           <code className={styles.code}>pages/index.js</code>
         </p>
 
@@ -58,12 +91,13 @@ export default function Home() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Powered by{' '}
+          Powered by{" "}
           <span className={styles.logo}>
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
       </footer>
+      <script src="./getIntPDF"></script>
     </div>
-  )
+  );
 }
