@@ -48,9 +48,8 @@ async function generatePdf(pageToConvert) {
 
     // Store page as pdf buffer:
     const pdfBuffer = await page.pdf({
-      width: dimensions.width,
-      height: dimensions.height,
       printBackground: true,
+      format: "a4",
     });
 
     await browser.close();
