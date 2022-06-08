@@ -6,8 +6,8 @@ export default function Home() {
   const clickedForPdf = async () => {
     // Capture current window's URL:
     const currentUrl = window.location.href;
-    // Pass this URL to the API's endpoint 'pdfGenerate' and download the streamed-response:
-    const returnedContent = await fetch(`/api/pdfGenerate?${currentUrl}`)
+    // Pass URL to the API's endpoint 'pdfGenerate' and then download the streamed-response:
+    const returnedContent = await fetch(`/api/pdfGenerate?target=${currentUrl}`)
       // Convert response body (readable stream) to 'blob':
       .then((response) => response.blob())
       // Generate url for this blob:
@@ -97,7 +97,6 @@ export default function Home() {
           </span>
         </a>
       </footer>
-      <script src="./getIntPDF"></script>
     </div>
   );
 }
